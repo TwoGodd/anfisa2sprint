@@ -7,11 +7,15 @@ from ice_cream.models import IceCream
 
 def index(request):
     template_name = 'homepage/index.html'
+
     ice_cream_list = IceCream.objects.values(
-    'id', 'title', 'description'
+        'id', 'title', 'category__title'
     ).filter(
-        is_published=True, is_on_main=True
-    ).order_by('title')[1:4]
+        # Вернуть только те объекты IceCream, у которых
+        # в связаном объекте Category в поле is_published хранится значение True:
+        category__is_published=True
+    )
+
     context = {
         'ice_cream_list': ice_cream_list,
     }
