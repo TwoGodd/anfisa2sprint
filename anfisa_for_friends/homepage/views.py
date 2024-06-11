@@ -1,19 +1,17 @@
-from django.db.models import Q
-
 from django.shortcuts import render
 
 from ice_cream.models import IceCream
 
-
 def index(request):
     template_name = 'homepage/index.html'
-
+    # Запрашиваем нужные поля из базы данных:
     ice_cream_list = IceCream.objects.values(
-        'id', 'title', 'category__title'
+        'id', 'title', 'price', 'description'
     ).filter(
-        # Вернуть только те объекты IceCream, у которых
-        # в связаном объекте Category в поле is_published хранится значение True:
-        category__is_published=True
+        # Проверяем, что
+        is_published=True,  # Сорт разрешён к публикации;
+        is_on_main=True,  # Сорт разрешён к публикации на главной странице;
+        category__is_published=True  # Категория разрешена к публикации.
     )
 
     context = {
